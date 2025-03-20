@@ -1,0 +1,86 @@
+
+
+
+# Folder Structure for CI/CD Jenkins Pipeline
+
+mkdir -p CI-CD-Jenkins-Pipeline/app
+cd CI-CD-Jenkins-Pipeline
+
+touch Jenkinsfile
+cat <<EOL > Jenkinsfile
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/Ksami9812/Repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Building Application..."'
+                sh 'docker build -t my-app .'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'echo "Running Tests..."'
+            }
+        }
+
+        stage('Deploy to AWS') {
+            steps {
+                sh 'chmod +x deploy.sh'
+                sh './deploy.sh'
+            }
+        }
+    }
+}
+EOL
+
+touch deploy.sh
+cat <<EOL > deploy.sh
+#!/bin/bash
+
+EC2_USER="ec2-user"
+EC2_HOST="your-ec2-instance-ip"
+APP_NAME="my-app"
+
+scp -i your-key.pem docker-compose.yml $EC2_USER@$EC2_HOST:/home/ec2-user/
+
+ssh -i your-key.pem $EC2_USER@$EC2_HOST << EOF
+    docker-compose down
+    docker-compose up -d --build
+EOF
+EOL
+
+chmod +x deploy.sh
+
+touch Dockerfile
+cat <<EOL > Dockerfile
+FROM python:3.8
+
+WORKDIR /app
+COPY . .
+
+CMD ["python", "app.py"]
+EOL
+
+touch README.md
+cat <<EOL > README.md
+# CI/CD Jenkins Pipeline Project
+
+This project sets up a Jenkins pipeline to automate the build, test, and deployment of an application to AWS EC2.
+
+## Steps:
+1. **Clone Repository** - Pulls code from GitHub.
+2. **Build** - Uses Docker to build the application.
+3. **Test** - Runs unit tests.
+4. **Deploy** - Deploys the application to AWS EC2.
+
+### Deployment Details
+- The pipeline uses deploy.sh to copy files to EC2 and restart the service.
+EOL
