@@ -48,6 +48,6 @@
 
 ## 📩 Let's Connect!
 
-📌 **LinkedIn**: [linkedin.com/in/samiullah-khan-502805171](https://www.linkedin.com/in/samiullah-khan-502805171)  
-📌 **GitHub**: [github.com/yourusername](https://github.com/Ksami9812)  
+📌 **LinkedIn**: www.linkedin.com/in/samiullah-khan-502805171 
+📌 **GitHub**: github.com/Ksami9812
 📌 **Email**: ksami9812@gmail.com  
