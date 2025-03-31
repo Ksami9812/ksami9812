@@ -10,11 +10,12 @@
 
 ## 🔧 Tech Stack & Tools
 
-- **Cloud & DevOps**: AWS (EC2, S3, RDS, IAM, VPC, Route 53), Kubernetes, Docker, Terraform, Ansible, Jenkins, GitHub Actions  
-- **Scripting & Automation**: Python (Basic), Shell Scripting, Bash, Terraform  
-- **CI/CD & Monitoring**: GitHub Actions, Jenkins, AWS CloudWatch, Prometheus, Grafana  
-- **Database**: Oracle Database, SQL  
-- **Operating Systems**: Linux, Unix  
+Cloud & DevOps Tools: AWS (EC2, S3, RDS, IAM, VPC, Lambda, CloudWatch) | Container Orchestration (Kubernetes, Docker) | Infrastructure as Code (IaC) (Terraform, AWS CloudFormation) | CI/CD & Version Control (Jenkins, AWS CodePipeline, GitHub, Git)
+Scripting & Automation: Python (Basic), Shell Scripting | Configuration Management: Ansible, AWS Systems Manager | DevOps & Automation: Terraform, Ansible, Jenkins
+Monitoring & Security: Cloud Monitoring (CloudWatch, Prometheus, Grafana, ELK Stack) | Incident & Change Management (ServiceNow (ITIL, ITSM, ITAM, ITOM, CMDB)) | Security & Compliance (IAM Policies, VPC, Access Control, Load Balancers)
+Soft Skills: Problem-Solving | Collaboration & Teamwork | Adaptability | Communication | Time Management | Attention to Detail | Proactiveness | Reliability | Change Management
+Operating Systems: Linux, Unix | Database: Oracle Database, SQL
+
 
 ---
 
