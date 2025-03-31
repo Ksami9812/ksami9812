@@ -1,6 +1,6 @@
 # 👋 Hi, I'm Samiullah Khan!
 
-## 🚀 AWS DevOps Engineer | Cloud & Infrastructure Automation Specialist
+## 🚀 AWS DevOps Engineer 
 
 🔹 **AWS Certified DevOps Engineer** with 3+ years of experience in cloud infrastructure, automation, and system monitoring. 
 🔹 Passionate about **Infrastructure as Code (IaC), CI/CD, Kubernetes, and DevOps Automation**.
