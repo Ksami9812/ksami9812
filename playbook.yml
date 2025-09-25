@@ -29,4 +29,3 @@
 
     - name: Start app with PM2
       command: pm2 start app.js --name my-node-app chdir=/var/www/my-node-app
-
