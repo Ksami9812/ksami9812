@@ -27,7 +27,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'a9c52c29-deb7-4188-8f86-85f20f98be1b') {
                         def image = docker.build("sami95/my-node-app:${env.BUILD_NUMBER}")
                         image.push()
                         image.push("latest")
