@@ -1,0 +1,38 @@
+- name: Deploy Node.js App
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Install Python pip (for docker module)
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker Python module
+      pip:
+        name: docker
+
+    - name: Build Docker image
+      docker_image:
+        name: mynodeapp
+        source: build
+        build:
+          path: .
+
+    - name: Run Docker container
+      docker_container:
+        name: mynodeapp
+        image: mynodeapp:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "3000:3000"
+

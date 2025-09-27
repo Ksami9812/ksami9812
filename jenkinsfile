@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    environment {
+        INVENTORY = "inventory.ini"
+        PLAYBOOK = "playbook.yml"
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t mynodeapp:latest .'
+            }
+        }
+
+        stage('Deploy via Ansible') {
+            steps {
+                sh "ansible-playbook -i ${INVENTORY} ${PLAYBOOK}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Node.js app deployed successfully!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
+
