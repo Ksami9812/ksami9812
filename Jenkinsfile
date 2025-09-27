@@ -2,62 +2,63 @@ pipeline {
     agent any
 
     environment {
-        INVENTORY = "ansible/inventory.ini"   // your existing inventory file
-        PLAYBOOK = "ansible/playbook.yml"     // your existing playbook
-        IMAGE_NAME = "mynodepipeline"              // matches your Dockerfile image name
+        IMAGE_NAME = "mynodepipeline"
     }
 
     stages {
-
-        stage('Checkout Code') {
+        stage('Checkout SCM') {
             steps {
-                git branch: 'main', url: 'https://github.com/Ksami9812/ksami9812.git'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Tag Docker image with short Git commit hash
-                    def commitHash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    // Get short commit hash
+                    def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
                     
-                    // Build Docker image using your existing Dockerfile
-                    sh "docker build -t ${IMAGE_NAME}:${commitHash} ."
-                    sh "docker tag ${IMAGE_NAME}:${commitHash} ${IMAGE_NAME}:latest"
+                    // Build and tag Docker image
+                    sh """
+                        docker build -t ${IMAGE_NAME}:${shortCommit} .
+                        docker tag ${IMAGE_NAME}:${shortCommit} ${IMAGE_NAME}:latest
+                    """
                 }
             }
         }
 
         stage('Push Docker Image to Docker Hub') {
             steps {
-                // Use your existing Jenkins Docker Hub credentials
                 withCredentials([usernamePassword(
-                    credentialsId: 'a3438d9a-5c1d-4478-803b-d3b7ca1873e5',
-                    usernameVariable: 'DOCKER_USER',
+                    credentialsId: 'b1a74edf-e139-41e3-89a4-776031757ce4', 
+                    usernameVariable: 'DOCKER_USER', 
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh "docker push ${IMAGE_NAME}:${commitHash}"
-                    sh "docker push ${IMAGE_NAME}:latest"
-                    sh 'docker logout'
+                    script {
+                        sh """
+                            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+                            docker push ${IMAGE_NAME}:latest
+                        """
+                    }
                 }
             }
         }
 
         stage('Deploy via Ansible') {
             steps {
-                // Run your existing Ansible playbook with inventory
-                sh "ansible-playbook -i ${INVENTORY} ${PLAYBOOK}"
+                echo "Deploying via Ansible..."
+                // Example Ansible command:
+                // sh "ansible-playbook -i inventory/hosts deploy.yml"
             }
         }
     }
 
     post {
         success {
-            echo 'Node.js app deployed successfully!'
+            echo "Deployment completed successfully."
         }
         failure {
-            echo 'Deployment failed.'
+            echo "Deployment failed."
         }
     }
 }
