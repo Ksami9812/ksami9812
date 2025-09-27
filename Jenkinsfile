@@ -2,15 +2,13 @@ pipeline {
     agent any
 
     environment {
-        INVENTORY = "ansible/inventory.ini"
-        PLAYBOOK = "ansible/playbook.yml"
-        IMAGE_NAME = "mypipeline"
+        DOCKER_IMAGE = "sami95/my-app:latest"
+        REGISTRY = "sami95/my-app"
         DOCKER_CREDENTIALS_ID = "b1a74edf-e139-41e3-89a4-776031757ce4"
     }
 
     stages {
-
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Ksami9812/ksami9812.git'
             }
@@ -19,45 +17,30 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Make commit hash available globally
-                    env.COMMIT_HASH = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                    
-                    sh "docker build -t ${IMAGE_NAME}:${env.COMMIT_HASH} ."
-                    sh "docker tag ${IMAGE_NAME}:${env.COMMIT_HASH} ${IMAGE_NAME}:latest"
+                    sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
+        stage('Push to Registry') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: "${DOCKER_CREDENTIALS_ID}",
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh """
-                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                        docker push ${IMAGE_NAME}:${env.COMMIT_HASH}
-                        docker push ${IMAGE_NAME}:latest
-                        docker logout
-                    """
+                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh "echo $PASS | docker login -u $USER --password-stdin"
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
 
-        stage('Deploy via Ansible') {
+        stage('Deploy with Ansible') {
             steps {
-                sh "ansible-playbook -i ${INVENTORY} ${PLAYBOOK}"
+                sh "ansible-playbook -i inventory.ini playbook.yml --extra-vars 'docker_image=${DOCKER_IMAGE}'"
             }
         }
     }
 
     post {
-        success {
-            echo 'Node.js app deployed successfully!'
-        }
-        failure {
-            echo 'Deployment failed.'
+        always {
+            cleanWs()
         }
     }
 }
