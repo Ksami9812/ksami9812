@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Checkout repo directly into workspace root
                 git branch: 'main', url: 'https://github.com/Ksami9812/ksami9812.git'
             }
         }
@@ -17,6 +18,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    // Make sure we are in the workspace root
+                    sh "ls -la" // optional, to verify Dockerfile is here
                     sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
@@ -40,7 +43,7 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            cleanWs() // cleanup workspace after pipeline
         }
     }
 }
