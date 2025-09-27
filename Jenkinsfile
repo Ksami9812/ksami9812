@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "mynodepipeline"
+        IMAGE_NAME = "mypipeline"
     }
 
     stages {
