@@ -1,6 +1,6 @@
 FROM node:20-alpine
 WORKDIR /app
-COPY package*.json ./
+COPY ksami9812/package*.json ./
 RUN npm install
-COPY . ./
+COPY ksami9812/ ./
 CMD ["npm", "start"]
