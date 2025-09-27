@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "sami95/my-app:latest"
         REGISTRY = "sami95/my-app"
-        DOCKER_CREDENTIALS_ID = "b1a74edf-e139-41e3-89a4-776031757ce4"
+        DOCKER_CREDENTIALS_ID = "cf7fba2b-b26b-472e-9f9b-0f9e825cb638"
     }
 
     stages {
